@@ -1,0 +1,104 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Upload File{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+{% block content %}
+<div class="row">
+	<div class="col-3">
+		<div class="flex-shrink-0 p-3 bg-white">
+		    <ul class="list-unstyled ps-0">
+			    <li class="nav-item">
+			        <a href="/drive/" class="nav-link" style="color: midnightblue;">
+			          <i class="fa fa-hdd"></i> My Drive
+			        </a>
+			    </li>
+			    <li class="nav-item">
+			        <a href="#" class="nav-link" style="color: midnightblue;">
+			          <i class="fa fa-users"></i> Shared with me
+			        </a>
+			    </li>
+			    <li class="nav-item">
+			        <a href="#" class="nav-link" style="color: midnightblue;">
+			          <i class="fa fa-clock"></i> Recent
+			        </a>
+			    </li>
+			    <li class="nav-item">
+			        <a href="#" class="nav-link" style="color: midnightblue;">
+			          <i class="fa fa-star"></i> Stared
+			        </a>
+			    </li>
+			    <li class="nav-item">
+			        <a href="#" class="nav-link" style="color: midnightblue;">
+			          <i class="fa fa-trash"></i> Trash
+			        </a>
+			    </li>
+		        <li class="border-top my-3"></li>
+		        <li class="nav-iten mb-1">
+		        	<span style="color: midnightblue;"><i class="fa fa-cloud"></i> Storage</span>
+		        	<br></br>
+		        	<span style="color: midnightblue;">1.28 GB of 15 GB used</span>
+		        </li>
+		    </ul>
+	  	</div>
+	</div>
+	<div class="col-9">
+		<div class="row">		
+			<h1>Django File Upload</h1>
+		    <form method="post" enctype="multipart/form-data">
+		      	{% csrf_token %}
+		      	{{ crispy }}
+				<input type="text" name="name" class="col-sm-12 textinput textInput form-control" maxlength="255" required="" id="id_name"/>
+				<input type="file" name="file" class="clearablefileinput form-control-file" id="id_file">
+				{% if id == 0 %}
+					<input type="hide" class="d-none" name="parent" id="id_parent" value="">
+				{% else %}
+					<input type="hide" class="d-none" name="parent" id="id_parent" value="{{ id }}">
+				{% endif %}
+				<input type="hidden" name="next" value="{{ request.path }}">
+		      <button type="submit">Submit</button>
+		    </form><hr>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$('myForm').trigger("reset");
+
+	function show(){
+		document.getElementById('myForm').style.display="block" ;
+	}
+
+	function hide(){
+		document.getElementById('myForm').style.display="none" ;
+	}
+
+	function remove(){
+		document.getElementById('newForm').remove() ;
+	}
+
+	function myFunction(id) {
+		if (document.contains(document.getElementById("newForm"))) {
+			document.getElementById("newForm").remove();
+		}
+
+		var a = document.getElementById(id);
+		a.insertAdjacentHTML('afterend', 
+			'<form id="newForm" class="form-insert py-2" action="/drive/" method="post"> \
+			{% csrf_token %} \
+			{{ crispy}} \
+			<input type="text" name="name" class="col-sm-12" maxlenght="255" required="" id="id_name"/> \
+			<select name="parent" class="d-none" id="id_parentt"> \
+			<option value="'+id+'" selected="'+id+'"></option> \
+			</select> \
+			<br></br> \
+			<div class="row"><div class="col-12"><div class="float-end"> \
+			<button type="submit" class="btn btn-primary">Add</button> \
+			<a href="#" class="btn btn-primary " onClick="remove()">Cancel</a> \
+			</div></div></div> \
+			</form>'
+			);
+	}
+</script>
+{% endblock %}
